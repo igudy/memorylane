@@ -21,6 +21,7 @@ app.use(morgan("common"))
 app.use(bodyParser.json({ limit: "30mb", extended: true }))
 app.use(cors());
 app.use("/assests", express.static(path.join(__dirname, 'public/assets')));
+import authRoutes from './routes/auth.js'
 import {register} from './controllers/auth.js'
 
 
@@ -37,6 +38,9 @@ const upload = multer({ storage });
 
 // ROUTES WITH FILES
 app.post("/auth/register", upload.single("picture"), register)
+
+// ROUTES
+app.use("/auth", authRoutes);
 
 // MONGOOSE SETUP
 const PORT = process.env.PORT || 6001;
