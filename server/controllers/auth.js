@@ -1,44 +1,41 @@
-import mongoose from "mongoose";
-  
-const UserSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        require: true,
-        min: 2,
-        max: 50,
-    },
-    lastName: {
-        type: String,
-        require: true,
-        min: 2,
-        max: 50,
-    },
-    email: {
-        type: String,
-        required: true,
-        max: 50,
-        unique: true,
-    },
-    password: {
-        type: String,
-        requird: true,
-        min: 5,
-    },
-    picturePath: {
-        type: String,
-        default: "",
-    },
-    friends: {
-        type: Array,
-        default: "",
-    },
-    location: String,
-    occupation: String,
-    viewedProfile: Number,
-    impression: Number
-}, { timestamps: true }
-);
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import User from '../models/User.js'
 
-const User = mongoose.model("User", UserSchema);
+// REGISTER USER
+export const register = async (req, res) => {
+    try {
+        const {
+            firstName,
+            lastName,
+            email,
+            password,
+            picturePath,
+            friends,
+            location,
+            occupation
+        } = req.body;
+
+        const salt = await bcrypt.genSalt();
+        const passwordHash = await bcrypt.hash(password, salt);
 
 
+        const newUser = new User({
+            firstName,
+            lastName,
+            email,
+            password: passwordHash,
+            picturePath,
+            friends,
+            location,
+            occupation,
+            viewedProfile: Math.floor(Math.random() * 10000),
+            impression: Math.floor(Math.random() * 10000)
+        });
+        const savedUser = await newUser.save();
+        res.status(201).json(savedUser);
+    } catch (error) {
+        res.status(500).json({error: err.message})
+        console.log(error)
+    }
+}
