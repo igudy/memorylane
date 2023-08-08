@@ -1,0 +1,6 @@
+Vite + Typescript + React Installation with folder
+npm init vite@latest vite-number-conversion -- --template react-ts
+
+
+Vite + Typescript + React Installation default folder
+npm init vite@latest ./ -- --template react-ts
