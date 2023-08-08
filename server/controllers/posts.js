@@ -46,7 +46,6 @@ export const getUserPosts = async (req, res) => {
     }
 }
 
-
 // UPDATE
 export const likePost = async (rq, res) => {
     try {
@@ -67,16 +66,3 @@ export const likePost = async (rq, res) => {
         res.status(404).json({message: error.message})
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

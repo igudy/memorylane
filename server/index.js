@@ -16,7 +16,8 @@ dotenv.config()
 const app = express();
 app.use(express.json())
 app.use(helmet())
-app.use(helmet.crossOriginEmbedderPolicy({ policy: "cross-origin" }))
+app.use(helmet.crossOriginEmbedderPolicy({ policy: "require-corp" }));
+
 app.use(morgan("common"))
 app.use(bodyParser.json({ limit: "30mb", extended: true }))
 app.use(cors());
@@ -27,6 +28,9 @@ import postRoutes from './routes/posts.js'
 import { register } from './controllers/auth.js'
 import {createPost} from './controllers/posts.js'
 import { verifyToken } from './middleware/auth.js'
+import User from './models/User.js'
+import Post from './models/Post.js'
+import {users, posts} from './data/index.js'
 
 // FILE STORAGE - Code to save picture
 const storage = multer.diskStorage({
@@ -51,11 +55,16 @@ app.use("/posts", postRoutes);
 // MONGOOSE SETUP
 const PORT = process.env.PORT || 6001;
 mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParse: true,
+    useNewUrlParser: true, // Correct option name
     useUnifiedTopology: true,
 }).then(() => {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`))
+
+    // ADD DATA ONE TIME
+    // User.insertMany(users);
+    // Post.insertMany(posts);
 }).catch((error) => console.log(`${error} did not connect`))
+
 
 
 
