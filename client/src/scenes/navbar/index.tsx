@@ -24,33 +24,38 @@ import { useDispatch, useSelector } from "react-redux"
 import { setMode, setLogout } from "../../state/index"
 import { useNavigate } from "react-router-dom"
 import FlexBetween from "../../components/FlexBetween"
+import { themeSettings } from "../../theme"
 
 interface RootState {
-  user: string
+  user: User
+  mode: "light" | "dark"
 }
-// interface Palette{
-//   neutral: string
 
-// }
+interface User {
+  firstName: string
+  lastName: string
+}
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const user = useSelector((state: RootState) => state.user) // Replace RootState with your actual RootState type
+  const user: User = useSelector((state: RootState) => state.user) // Replace RootState with your actual RootState type
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)")
 
   const theme = useTheme()
-  const neutralLight = theme.palette.neutral.light: string
-  const dark = theme.palette.neutral.dark:string
-  const background = theme.palette.background.default
-  const primaryLight = theme.palette.primary.light
-  const alt = theme.palette.background.alt
+  const mode = useSelector((state: RootState) => state.mode)
+  const themeOptions = themeSettings(mode)
+  const neutralLight = themeOptions.palette.neutral.light
+  const dark = themeOptions.palette.neutral.dark
+  const background = themeOptions.palette.background.default
+  const primaryLight = themeOptions.palette.primary.light
+  const alt = themeOptions.palette.background.alt
 
-  const fullName = `${user.firstName} ${user.lastName}`
+  const fullName: string = `${user.firstName} ${user.lastName}`
 
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween padding="1rem 6%" sx={{ backgroundColor: alt }}>
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"
@@ -64,14 +69,16 @@ const Navbar = () => {
             },
           }}
         >
-          Sociopedia
+          MemoryLane
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            padding="0.1rem 1.5rem"
+            sx={{
+              backgroundColor: neutralLight,
+              borderRadius: "9px",
+              gap: "3rem",
+              padding: "0.1rem 1.5rem",
+            }}
           >
             <InputBase placeholder="Search..." />
             <IconButton>
@@ -94,9 +101,10 @@ const Navbar = () => {
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
-          <FormControl variant="standard" value={fullName}>
+          <FormControl variant="standard">
             <Select
-              value={fullName}
+              value={fullName} // You can use this if you intend to control the value externally
+              defaultValue={fullName} // Set the default value
               sx={{
                 backgroundColor: neutralLight,
                 width: "150px",
@@ -130,14 +138,16 @@ const Navbar = () => {
       {/* MOBILE NAV */}
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
-          position="fixed"
-          right="0"
-          bottom="0"
-          height="100%"
-          zIndex="10"
-          maxWidth="500px"
-          minWidth="300px"
-          backgroundColor={background}
+          sx={{
+            position: "fixed",
+            right: 0,
+            bottom: 0,
+            height: "100%",
+            zIndex: 10,
+            maxWidth: "500px",
+            minWidth: "300px",
+            backgroundColor: background,
+          }}
         >
           {/* CLOSE ICON */}
           <Box display="flex" justifyContent="flex-end" p="1rem">
@@ -169,7 +179,7 @@ const Navbar = () => {
             <Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} />
-            <FormControl variant="standard" value={fullName}>
+            <FormControl variant="standard">
               <Select
                 value={fullName}
                 sx={{

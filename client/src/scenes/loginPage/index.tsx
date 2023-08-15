@@ -1,6 +1,6 @@
 import React from "react"
 
-const index = () => {
+const LoginPage = () => {
   return (
     <div>
       <h2>This is the loginPage</h2>
@@ -8,4 +8,4 @@ const index = () => {
   )
 }
 
-export default index
+export default LoginPage
