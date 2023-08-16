@@ -32,8 +32,8 @@ interface RootState {
 }
 
 interface User {
-  firstName: string
-  lastName: string
+  firstName: any
+  lastName: any
 }
 
 const Navbar = () => {
@@ -52,7 +52,7 @@ const Navbar = () => {
   const primaryLight = themeOptions.palette.primary.light
   const alt = themeOptions.palette.background.alt
 
-  const fullName: string = `${user.firstName} ${user.lastName}`
+  const fullName = user ? `${user.firstName} ${user.lastName}` : ""
 
   return (
     <FlexBetween padding="1rem 6%" sx={{ backgroundColor: alt }}>
