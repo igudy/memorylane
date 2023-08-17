@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux"
 import { setLogin } from "../../state"
 import Dropzone from "react-dropzone"
 import FlexBetween from "../../components/FlexBetween"
+import { themeSettings } from "../../theme"
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -61,7 +62,7 @@ const initialValuesLogin: LoginValues = {
   email: "",
   password: "",
 }
-
+let mode: "light" | "dark"
 // React.FC in typescript shows that it is a functional component
 
 const Form: React.FC = () => {
@@ -72,28 +73,78 @@ const Form: React.FC = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)")
   const isLogin = pageType === "login"
   const isRegister = pageType === "register"
+  const theme = useTheme()
+  const themeOptions = themeSettings(mode)
+  const alt = themeOptions.palette.background.alt
 
   //React.FC is used as the type for the functional component.
   // FormikHelpers is used as the type for the second parameter of the form submission functions.
-  const register = async (
-    values: RegisterValues,
-    onSubmitProps: FormikHelpers<RegisterValues>
-  ) => {
+  // const register = async (
+  //   values: RegisterValues,
+  //   onSubmitProps: FormikHelpers<RegisterValues>
+  // ) => {
+  //   // this allows us to send form info with image
+  //   const formData = new FormData()
+  //   for (let key in values) {
+  //     if (Object.prototype.hasOwnProperty.call(values, key)) {
+  //       formData.append(key, values[key as keyof RegisterValues])
+  //     }
+  //   }
+  //   // formData.append("picturePath", values.picture.name)
+  //   formData.append("picturePath", values.picture)
+
+  //   const savedUserResponse = await fetch(
+  //     "http://localhost:3001/auth/register",
+  //     {
+  //       method: "POST",
+  //       body: formData,
+  //     }
+  //   );
+  //   const savedUser = await savedUserResponse.json();
+  //   onSubmitProps.resetForm();
+
+  //   if (savedUser) {
+  //     setPageType("login");
+  //   }
+  // }
+
+  // const login = async (
+  //   values: LoginValues,
+  //   onSubmitProps: FormikHelpers<LoginValues>
+  // ) => {
+  //   const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(values),
+  //   })
+  //   const loggedIn = await loggedInResponse.json()
+  //   onSubmitProps.resetForm()
+  //   if (loggedIn) {
+  //     dispatch(
+  //       setLogin({
+  //         user: loggedIn.user,
+  //         token: loggedIn.token,
+  //       })
+  //     )
+  //     navigate("/home")
+  //   }
+  // }
+
+  // const handleFormSubmit = async (
+  //   values: RegisterValues | LoginValues,
+  //   onSubmitProps: FormikHelpers<RegisterValues | LoginValues>
+  // ) => {
+  //   if (isLogin) await login(values, onSubmitProps)
+  //   if (isRegister) await register(values, onSubmitProps)
+  // }
+
+  const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
-    // const formData = new FormData()
-    // for (let key in values) {
-    //   if (values.hasOwnProperty(key)) {
-    //     formData.append(key, values[key])
-    //   }
-    // }
     const formData = new FormData()
-    for (let key in values) {
-      if (Object.prototype.hasOwnProperty.call(values, key)) {
-        formData.append(key, values[key as keyof RegisterValues])
-      }
+    for (let value in values) {
+      formData.append(value, values[value])
     }
-    // formData.append("picturePath", values.picture.name)
-    formData.append("picturePath", values.picture)
+    formData.append("picturePath", values.picture.name)
 
     const savedUserResponse = await fetch(
       "http://localhost:3001/auth/register",
@@ -105,16 +156,12 @@ const Form: React.FC = () => {
     const savedUser = await savedUserResponse.json()
     onSubmitProps.resetForm()
 
-    // Goes to the login part when done registering
     if (savedUser) {
       setPageType("login")
     }
   }
 
-  const login = async (
-    values: LoginValues,
-    onSubmitProps: FormikHelpers<LoginValues>
-  ) => {
+  const login = async (values, onSubmitProps) => {
     const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -133,10 +180,7 @@ const Form: React.FC = () => {
     }
   }
 
-  const handleFormSubmit = async (
-    values: RegisterValues | LoginValues,
-    onSubmitProps: FormikHelpers<RegisterValues | LoginValues>
-  ) => {
+  const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps)
     if (isRegister) await register(values, onSubmitProps)
   }
@@ -280,7 +324,7 @@ const Form: React.FC = () => {
                 m: "2rem 0",
                 p: "1rem",
                 backgroundColor: palette.primary.main,
-                color: palette.background.alt,
+                alt,
                 "&:hover": { color: palette.primary.main },
               }}
             >
