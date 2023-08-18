@@ -5,7 +5,6 @@ interface User {
   id: string
   username: string
   friends: string
-  // ... other properties
 }
 
 interface Post {
@@ -13,7 +12,6 @@ interface Post {
   _id: string
   title: string
   content: string
-  // ... other properties
 }
 
 interface AuthState {
@@ -42,6 +40,7 @@ export const authSlice = createSlice({
       state.user = action.payload.user
       state.token = action.payload.token
     },
+
     setLogout: (state) => {
       state.user = null
       state.token = null
