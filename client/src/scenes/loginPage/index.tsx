@@ -1,8 +1,6 @@
-import React from "react" // Import React
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material"
+import { Box, Typography, useMediaQuery } from "@mui/material"
 import Form from "./Form"
-import { useDispatch, useSelector } from "react-redux"
-import { setMode, setLogout } from "../../state/index"
+import { useSelector } from "react-redux"
 import { themeSettings } from "../../theme"
 
 interface RootState {
@@ -10,13 +8,8 @@ interface RootState {
 }
 
 const LoginPage = () => {
-  const theme = useTheme()
   const mode = useSelector((state: RootState) => state.mode)
   const themeOptions = themeSettings(mode)
-  // const neutralLight = themeOptions.palette.neutral.light
-  // const dark = themeOptions.palette.neutral.dark
-  // const background = themeOptions.palette.background.default
-  // const primaryLight = themeOptions.palette.primary.light
   const alt = themeOptions.palette.background.alt
 
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)")
@@ -36,7 +29,7 @@ const LoginPage = () => {
       </Box>
       <Box
         sx={{
-          width: isNonMobileScreens ? "50%" : "93%", // Added a comma
+          width: isNonMobileScreens ? "50%" : "93%",
           p: "2rem", // Added a comma
           m: "2rem auto",
           borderRadius: "1.5rem",
@@ -46,7 +39,6 @@ const LoginPage = () => {
         <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
           Welcome to MemoryLane, the social media to share your memories!
         </Typography>
-        {/* Form */}
         <Form />
       </Box>
     </Box>

@@ -40,7 +40,7 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const user: User = useSelector((state: RootState) => state.user) // Replace RootState with your actual RootState type
+  const user: User = useSelector((state: RootState) => state.user)
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)")
 
   const theme = useTheme()

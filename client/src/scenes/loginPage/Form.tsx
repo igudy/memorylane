@@ -40,7 +40,16 @@ interface RegisterValues {
   password: string
   location: string
   occupation: string
-  picture: File | string
+  picture: Picture
+  value: Value
+}
+
+interface Value {
+  value: []
+}
+
+interface Picture {
+  name: string | File
 }
 
 interface LoginValues {
@@ -63,8 +72,8 @@ const initialValuesLogin: LoginValues = {
   password: "",
 }
 let mode: "light" | "dark"
-// React.FC in typescript shows that it is a functional component
 
+// React.FC in typescript shows that it is a functional component
 const Form: React.FC = () => {
   const [pageType, setPageType] = useState("login")
   const { palette } = useTheme()
@@ -73,11 +82,13 @@ const Form: React.FC = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)")
   const isLogin = pageType === "login"
   const isRegister = pageType === "register"
-  const theme = useTheme()
   const themeOptions = themeSettings(mode)
   const alt = themeOptions.palette.background.alt
 
-  const register = async (values, onSubmitProps) => {
+  const register = async (
+    values: RegisterValues,
+    onSubmitProps: FormikHelpers<RegisterValues>
+  ) => {
     // this allows us to send form info with image
     const formData = new FormData()
     for (let value in values) {
@@ -100,7 +111,10 @@ const Form: React.FC = () => {
     }
   }
 
-  const login = async (values, onSubmitProps) => {
+  const login = async (
+    values: LoginValues, // Specify the type for values
+    onSubmitProps: FormikHelpers<LoginValues> // Specify the type for onSubmitProps
+  ) => {
     const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -119,9 +133,12 @@ const Form: React.FC = () => {
     }
   }
 
-  const handleFormSubmit = async (values, onSubmitProps) => {
-    if (isLogin) await login(values, onSubmitProps)
+  const handleFormSubmit = async (
+    values: RegisterValues | LoginValues,
+    onSubmitProps: FormikHelpers<RegisterValues | LoginValues>
+  ) => {
     if (isRegister) await register(values, onSubmitProps)
+    if (isLogin) await login(values, onSubmitProps)
   }
 
   return (
