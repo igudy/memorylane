@@ -32,8 +32,8 @@ interface RootState {
 }
 
 interface User {
-  firstName: any
-  lastName: any
+  firstName: string
+  lastName: string
 }
 
 const Navbar = () => {

@@ -77,67 +77,6 @@ const Form: React.FC = () => {
   const themeOptions = themeSettings(mode)
   const alt = themeOptions.palette.background.alt
 
-  //React.FC is used as the type for the functional component.
-  // FormikHelpers is used as the type for the second parameter of the form submission functions.
-  // const register = async (
-  //   values: RegisterValues,
-  //   onSubmitProps: FormikHelpers<RegisterValues>
-  // ) => {
-  //   // this allows us to send form info with image
-  //   const formData = new FormData()
-  //   for (let key in values) {
-  //     if (Object.prototype.hasOwnProperty.call(values, key)) {
-  //       formData.append(key, values[key as keyof RegisterValues])
-  //     }
-  //   }
-  //   // formData.append("picturePath", values.picture.name)
-  //   formData.append("picturePath", values.picture)
-
-  //   const savedUserResponse = await fetch(
-  //     "http://localhost:3001/auth/register",
-  //     {
-  //       method: "POST",
-  //       body: formData,
-  //     }
-  //   );
-  //   const savedUser = await savedUserResponse.json();
-  //   onSubmitProps.resetForm();
-
-  //   if (savedUser) {
-  //     setPageType("login");
-  //   }
-  // }
-
-  // const login = async (
-  //   values: LoginValues,
-  //   onSubmitProps: FormikHelpers<LoginValues>
-  // ) => {
-  //   const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(values),
-  //   })
-  //   const loggedIn = await loggedInResponse.json()
-  //   onSubmitProps.resetForm()
-  //   if (loggedIn) {
-  //     dispatch(
-  //       setLogin({
-  //         user: loggedIn.user,
-  //         token: loggedIn.token,
-  //       })
-  //     )
-  //     navigate("/home")
-  //   }
-  // }
-
-  // const handleFormSubmit = async (
-  //   values: RegisterValues | LoginValues,
-  //   onSubmitProps: FormikHelpers<RegisterValues | LoginValues>
-  // ) => {
-  //   if (isLogin) await login(values, onSubmitProps)
-  //   if (isRegister) await register(values, onSubmitProps)
-  // }
-
   const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
     const formData = new FormData()

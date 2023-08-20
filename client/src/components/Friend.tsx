@@ -1,25 +1,61 @@
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material"
-import { Box, IconButton, Typography, useTheme } from "@mui/material"
+import { Box, IconButton, Typography } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { setFriends } from "../state"
 import FlexBetween from "./FlexBetween"
 import UserImage from "./UserImage"
+import { themeSettings } from "../theme"
 
-const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
+// Mode for themeSettings
+let mode: "light" | "dark"
+
+// Typescript declaration
+interface FriendProps {
+  friendId: string
+  name: string
+  subtitle: string
+  userPicturePath: string
+}
+
+interface User {
+  _id: string
+  firstName: string
+  lastName: string
+  // state.user.friends = interface User{friends: string}
+  friends: Friend[]
+}
+
+interface RootState {
+  user: User
+  token: string
+}
+
+interface Friend {
+  _id: string
+}
+
+// FC means functional component
+const Friend: React.FC<FriendProps> = ({
+  friendId,
+  name,
+  subtitle,
+  userPicturePath,
+}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { _id } = useSelector((state) => state.user)
-  const token = useSelector((state) => state.token)
-  const friends = useSelector((state) => state.user.friends)
+  const { _id } = useSelector((state: RootState) => state.user)
+  const token = useSelector((state: RootState) => state.token)
+  const friends = useSelector((state: RootState) => state.user.friends)
+  const themeOptions = themeSettings(mode)
 
-  const { palette } = useTheme()
-  const primaryLight = palette.primary.light
-  const primaryDark = palette.primary.dark
-  const main = palette.neutral.main
-  const medium = palette.neutral.medium
+  // Defining themes
+  const primaryLight = themeOptions.palette.primary.light
+  const primaryDark = themeOptions.palette.primary.dark
+  const main = themeOptions.palette.neutral.main
+  const medium = themeOptions.palette.neutral.medium
 
-  const isFriend = friends.find((friend) => friend._id === friendId)
+  const isFriend = friends.find((friend: Friend) => friend._id === friendId)
 
   const patchFriend = async () => {
     const response = await fetch(
@@ -52,7 +88,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
             fontWeight="500"
             sx={{
               "&:hover": {
-                color: palette.primary.light,
+                color: themeOptions.palette.primary.light,
                 cursor: "pointer",
               },
             }}

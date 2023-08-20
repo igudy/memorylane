@@ -52,7 +52,7 @@ export const login = async (req, res) => {
     delete user.password;
     res.status(200).json({ token, user });
     // As you login, that is with the post request, everything goes to your payload
-    console.log(token,user)
+    // console.log(token,user)
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
