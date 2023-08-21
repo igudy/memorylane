@@ -11,21 +11,41 @@ import WidgetWrapper from "../../components/WidgetWrapper"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setPost } from "../../state"
+import { themeSettings } from "../../theme"
 
-// Like function
-const patchLike = async () => {
-  const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userId: loggedInUserId }),
-  })
-  const updatedPost = await response.json()
-  dispatch(setPost({ post: updatedPost }))
+interface Comment {
+  comment: string
+  comments: Comment | Comment[]
 }
-const PostWidget = ({
+
+interface Likes {
+  [userId: string]: boolean
+}
+
+interface PostWidgetProps {
+  postId: string
+  postUserId: string
+  name: string
+  description: string
+  location: string
+  picturePath: string
+  userPicturePath: string
+  likes: Likes[]
+  comments: Comment[]
+}
+
+interface User {
+  _id: string
+}
+
+interface RootState {
+  token: string | null
+  user: User
+}
+
+let mode: "light" | "dark"
+
+const PostWidget: React.FC<PostWidgetProps> = ({
   postId,
   postUserId,
   name,
@@ -38,14 +58,29 @@ const PostWidget = ({
 }) => {
   const [isComments, setIsComments] = useState(false)
   const dispatch = useDispatch()
-  const token = useSelector((state) => state.token)
-  const loggedInUserId = useSelector((state) => state.user._id)
-  const isLiked = Boolean(likes[loggedInUserId])
+  const token = useSelector((state: RootState) => state.token)
+  const loggedInUserId = useSelector((state: RootState) => state.user._id)
   const likeCount = Object.keys(likes).length
+  const isLiked = likes[loggedInUserId]
 
-  const { palette } = useTheme()
-  const main = palette.neutral.main
-  const primary = palette.primary.main
+  const themeOptions = themeSettings(mode)
+  const main = themeOptions.palette.neutral.main
+  const primary = themeOptions.palette.primary.main
+
+  // Like function
+  const patchLike = async () => {
+    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: loggedInUserId }),
+    })
+    const updatedPost = await response.json()
+    // dispatch(setPost({ post: updatedPost }))
+    dispatch(setPost({ post_id: postId, post: updatedPost }))
+  }
 
   return (
     <WidgetWrapper m="2rem 0">

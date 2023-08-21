@@ -3,17 +3,46 @@ import { useDispatch, useSelector } from "react-redux"
 import { setPosts } from "../../state"
 import PostWidget from "./PostWidget"
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+// Typescript declaration
+interface PostsWidgetProps {
+  userId: string
+  isProfile: boolean
+}
+
+interface PostData {
+  _id: string
+  userId: string
+  firstName: string
+  lastName: string
+  description: string
+  location: string
+  picturePath: string
+  userPicturePath: string
+  likes: number[]
+  comments: string[]
+  title: string
+  content: string
+}
+
+interface RootState {
+  posts: PostData[] //array of objects
+  token: string | null
+}
+
+const PostsWidget: React.FC<PostsWidgetProps> = ({
+  userId,
+  isProfile = false,
+}) => {
   const dispatch = useDispatch()
-  const posts = useSelector((state) => state.posts)
-  const token = useSelector((state) => state.token)
+  const posts = useSelector((state: RootState) => state.posts)
+  const token = useSelector((state: RootState) => state.token)
 
   const getPosts = async () => {
     const response = await fetch("http://localhost:3001/posts", {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     })
-    const data = await response.json()
+    const data: PostData[] = await response.json()
     dispatch(setPosts({ posts: data }))
   }
 
@@ -25,7 +54,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     )
-    const data = await response.json()
+    const data: PostData[] = await response.json()
     dispatch(setPosts({ posts: data }))
   }
 

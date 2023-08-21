@@ -6,9 +6,23 @@ import MyPostWidget from "../../scenes/widgets/MyPostWidget"
 import PostsWidget from "../../scenes/widgets/PostsWidget"
 import AdvertWidget from "../../scenes/widgets/AdvertWidget"
 import FriendListWidget from "../../scenes/widgets/FriendListWidget"
+
+interface User {
+  user: string
+  _id: string
+  picturePath: string
+}
+
+interface RootState {
+  user: User
+  token: string
+}
+
+const token = useSelector((state: RootState) => state.token)
+
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)")
-  const { _id, picturePath } = useSelector((state) => state.user)
+  const { _id, picturePath } = useSelector((state: RootState) => state.user)
 
   return (
     <Box>

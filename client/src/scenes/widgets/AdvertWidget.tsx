@@ -1,12 +1,18 @@
-import { Typography, useTheme } from "@mui/material"
+import { Typography } from "@mui/material"
 import FlexBetween from "../../components/FlexBetween"
 import WidgetWrapper from "../../components/WidgetWrapper"
+import { themeSettings } from "../../theme"
+
+// Mode for themeSettings
+let mode: "light" | "dark"
 
 const AdvertWidget = () => {
-  const { palette } = useTheme()
-  const dark = palette.neutral.dark
-  const main = palette.neutral.main
-  const medium = palette.neutral.medium
+  const themeOptions = themeSettings(mode)
+
+  // Defining themes
+  const dark = themeOptions.palette.neutral.dark
+  const main = themeOptions.palette.neutral.main
+  const medium = themeOptions.palette.neutral.medium
 
   return (
     <WidgetWrapper>

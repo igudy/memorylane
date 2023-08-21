@@ -12,30 +12,49 @@ import {
   Divider,
   Typography,
   InputBase,
-  useTheme,
   Button,
   IconButton,
   useMediaQuery,
 } from "@mui/material"
 import FlexBetween from "../../components/FlexBetween"
-import Dropzone from "react-dropzone"
+import Dropzone, { DropzoneState } from "react-dropzone"
 import UserImage from "../../components/UserImage"
 import WidgetWrapper from "../../components/WidgetWrapper"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setPosts } from "../../state"
+import { themeSettings } from "../../theme"
 
-const MyPostWidget = ({ picturePath }) => {
+// Mode for themeSettings
+let mode: "light" | "dark"
+
+interface MyPostWidgetProps {
+  picturePath: string
+}
+
+interface RootState {
+  user: User
+  token: null
+}
+
+interface User {
+  _id: string
+  user: string
+}
+
+const MyPostWidget: React.FC<MyPostWidgetProps> = ({ picturePath }) => {
   const dispatch = useDispatch()
   const [isImage, setIsImage] = useState(false)
-  const [image, setImage] = useState(null)
+  // const [image, setImage] = useState(null)
+  const [image, setImage] = useState<File | null>(null)
   const [post, setPost] = useState("")
-  const { palette } = useTheme()
-  const { _id } = useSelector((state) => state.user)
-  const token = useSelector((state) => state.token)
+  const { _id } = useSelector((state: RootState) => state.user)
+  const token = useSelector((state: RootState) => state.token)
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)")
-  const mediumMain = palette.neutral.mediumMain
-  const medium = palette.neutral.medium
+  const themeOptions = themeSettings(mode)
+
+  const mediumMain = themeOptions.palette.neutral.mediumMain
+  const medium = themeOptions.palette.neutral.medium
 
   const handlePost = async () => {
     const formData = new FormData()
@@ -67,7 +86,7 @@ const MyPostWidget = ({ picturePath }) => {
           value={post}
           sx={{
             width: "100%",
-            backgroundColor: palette.neutral.light,
+            backgroundColor: themeOptions.palette.neutral.light,
             borderRadius: "2rem",
             padding: "1rem 2rem",
           }}
@@ -80,16 +99,63 @@ const MyPostWidget = ({ picturePath }) => {
           mt="1rem"
           p="1rem"
         >
-          <Dropzone
+          {/* <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
-            onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
+            onDrop={(acceptedFiles: File[]) => setImage(acceptedFiles[0])}
           >
-            {({ getRootProps, getInputProps }) => (
+            {({ getRootProps, getInputProps }: DropzoneState) => (
               <FlexBetween>
                 <Box
                   {...getRootProps()}
-                  border={`2px dashed ${palette.primary.main}`}
+                  border={`2px dashed ${themeOptions.palette.primary.main}`}
+                  p="1rem"
+                  width="100%"
+                  sx={{ "&:hover": { cursor: "pointer" } }}
+                >
+                  <input {...getInputProps()} />
+                  {!image ? (
+                    <p>Add Image Here</p>
+                  ) : (
+                    <FlexBetween>
+                      <Typography>{image.name}</Typography>
+                      <EditOutlined />
+                    </FlexBetween>
+                  )}
+                </Box>
+                {image && (
+                  <IconButton
+                    onClick={() => setImage(null)}
+                    sx={{ width: "15%" }}
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                )}
+              </FlexBetween>
+            )}
+          </Dropzone> */}
+          <Dropzone
+            multiple={false}
+            onDrop={(acceptedFiles: File[]) => {
+              // Check if the acceptedFiles array contains valid file types
+              const allowedTypes = [".jpg", ".jpeg", ".png"]
+              const isValidFileType = acceptedFiles.every((file) =>
+                allowedTypes.includes(file.name.slice(-4).toLowerCase())
+              )
+
+              if (isValidFileType) {
+                setImage(acceptedFiles[0])
+              } else {
+                // Handle invalid file type here, e.g., show an error message
+                console.error("Invalid file type")
+              }
+            }}
+          >
+            {({ getRootProps, getInputProps }: DropzoneState) => (
+              <FlexBetween>
+                <Box
+                  {...getRootProps()}
+                  border={`2px dashed ${themeOptions.palette.primary.main}`}
                   p="1rem"
                   width="100%"
                   sx={{ "&:hover": { cursor: "pointer" } }}
@@ -115,6 +181,11 @@ const MyPostWidget = ({ picturePath }) => {
               </FlexBetween>
             )}
           </Dropzone>
+          In this modified code, we remove the acceptedFiles prop from Dropzone
+          and instead, in the onDrop function, we validate the file types of the
+          dropped files and only set the image state if the file types are
+          valid. If the file types are not valid, you can handle the error or
+          provide appropriate feedback to the user.
         </Box>
       )}
 
@@ -158,8 +229,8 @@ const MyPostWidget = ({ picturePath }) => {
           disabled={!post}
           onClick={handlePost}
           sx={{
-            color: palette.background.alt,
-            backgroundColor: palette.primary.main,
+            color: themeOptions.palette.background.alt,
+            backgroundColor: themeOptions.palette.primary.main,
             borderRadius: "3rem",
           }}
         >
