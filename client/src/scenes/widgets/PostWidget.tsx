@@ -30,7 +30,7 @@ interface PostWidgetProps {
   location: string
   picturePath: string
   userPicturePath: string
-  likes: Likes[]
+  likes: Likes
   comments: Comment[]
 }
 

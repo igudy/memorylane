@@ -18,8 +18,6 @@ interface RootState {
   token: string
 }
 
-const token = useSelector((state: RootState) => state.token)
-
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)")
   const { _id, picturePath } = useSelector((state: RootState) => state.user)

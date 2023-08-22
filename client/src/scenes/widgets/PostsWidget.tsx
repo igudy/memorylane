@@ -8,6 +8,16 @@ interface PostsWidgetProps {
   userId: string
   isProfile: boolean
 }
+interface Likes {
+  id: string
+  likes: number
+}
+
+interface Comment {
+  id: string
+  text: string
+  comment: string
+}
 
 interface PostData {
   _id: string
@@ -18,8 +28,8 @@ interface PostData {
   location: string
   picturePath: string
   userPicturePath: string
-  likes: number[]
-  comments: string[]
+  likes: Likes[]
+  comments: Comment[]
   title: string
   content: string
 }
