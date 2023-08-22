@@ -18,6 +18,8 @@ interface RootState {
   token: string
 }
 
+let isProfile: boolean
+
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)")
   const { _id, picturePath } = useSelector((state: RootState) => state.user)
@@ -40,7 +42,7 @@ const HomePage = () => {
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
           <MyPostWidget picturePath={picturePath} />
-          <PostsWidget userId={_id} />
+          <PostsWidget userId={_id} isProfile={isProfile} />
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">

@@ -2,7 +2,7 @@ import { Box } from "@mui/material"
 
 interface UserImageProps {
   image: string
-  // size?: string
+  size?: string
 }
 
 const UserImage: React.FC<UserImageProps> = ({ image, size = "60px" }) => {

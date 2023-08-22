@@ -4,22 +4,45 @@ import {
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material"
-import { Box, Typography, Divider, useTheme } from "@mui/material"
+import { Box, Typography, Divider } from "@mui/material"
 import UserImage from "../../components/UserImage"
 import FlexBetween from "../../components/FlexBetween"
 import WidgetWrapper from "../../components/WidgetWrapper"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { themeSettings } from "../../theme"
 
-const UserWidget = ({ userId, picturePath }) => {
+// Mode for themeSettings
+let mode: "light" | "dark"
+
+interface User {
+  _id: string
+  firstName: string
+  lastName: string
+  length: number | string
+}
+
+interface UserWidgetProps {
+  userId: string
+  picturePath: string
+  friends: User[]
+}
+
+interface RootState {
+  user: User
+  token: null
+}
+
+const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null)
-  const { palette } = useTheme()
+
   const navigate = useNavigate()
-  const token = useSelector((state) => state.token)
-  const dark = palette.neutral.dark
-  const medium = palette.neutral.medium
-  const main = palette.neutral.main
+  const token = useSelector((state: RootState) => state.token)
+  const themeOptions = themeSettings(mode)
+  const dark = themeOptions.palette.neutral.dark
+  const medium = themeOptions.palette.neutral.medium
+  const main = themeOptions.palette.neutral.main
 
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
@@ -65,7 +88,7 @@ const UserWidget = ({ userId, picturePath }) => {
               fontWeight="500"
               sx={{
                 "&:hover": {
-                  color: palette.primary.light,
+                  color: themeOptions.palette.primary.light,
                   cursor: "pointer",
                 },
               }}

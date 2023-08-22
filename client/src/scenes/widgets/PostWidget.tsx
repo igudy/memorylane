@@ -127,19 +127,27 @@ const PostWidget: React.FC<PostWidgetProps> = ({
           <ShareOutlined />
         </IconButton>
       </FlexBetween>
-      {isComments && (
-        <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
-              </Typography>
-            </Box>
-          ))}
+      {comments.map((comment, i) => (
+        <Box key={`${name}-${i}`}>
           <Divider />
+          {typeof comment === "string" ? (
+            <Typography
+              variant="body1"
+              sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}
+            >
+              {comment}
+            </Typography>
+          ) : (
+            // Handle non-string comment here, e.g., display an error message
+            <Typography
+              variant="body1"
+              sx={{ color: "error", m: "0.5rem 0", pl: "1rem" }}
+            >
+              Invalid comment format
+            </Typography>
+          )}
         </Box>
-      )}
+      ))}
     </WidgetWrapper>
   )
 }
