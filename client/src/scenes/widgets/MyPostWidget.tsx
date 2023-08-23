@@ -86,7 +86,7 @@ const MyPostWidget: React.FC<MyPostWidgetProps> = ({ picturePath }) => {
           value={post}
           sx={{
             width: "100%",
-            backgroundColor: themeOptions.palette.neutral.light,
+            backgroundColor: themeOptions.palette.neutral.dark,
             borderRadius: "2rem",
             padding: "1rem 2rem",
           }}
@@ -181,11 +181,6 @@ const MyPostWidget: React.FC<MyPostWidgetProps> = ({ picturePath }) => {
               </FlexBetween>
             )}
           </Dropzone>
-          In this modified code, we remove the acceptedFiles prop from Dropzone
-          and instead, in the onDrop function, we validate the file types of the
-          dropped files and only set the image state if the file types are
-          valid. If the file types are not valid, you can handle the error or
-          provide appropriate feedback to the user.
         </Box>
       )}
 

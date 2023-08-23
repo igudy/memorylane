@@ -35,7 +35,7 @@ interface PostData {
 
 interface RootState {
   posts: PostData[] //array of objects
-  token: string | null
+  token: null
 }
 
 const PostsWidget: React.FC<PostsWidgetProps> = ({
@@ -73,7 +73,7 @@ const PostsWidget: React.FC<PostsWidgetProps> = ({
     } else {
       getPosts()
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isProfile, userId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

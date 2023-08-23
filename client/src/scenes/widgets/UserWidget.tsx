@@ -26,7 +26,7 @@ interface User {
 interface UserWidgetProps {
   userId: string
   picturePath: string
-  friends: User[]
+  friends: number
 }
 
 interface RootState {
