@@ -52,9 +52,10 @@ const MyPostWidget: React.FC<MyPostWidgetProps> = ({ picturePath }) => {
   const token = useSelector((state: RootState) => state.token)
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)")
   const themeOptions = themeSettings(mode)
-
   const mediumMain = themeOptions.palette.neutral.mediumMain
   const medium = themeOptions.palette.neutral.medium
+  const dark = themeOptions.palette.neutral.dark
+  const light = themeOptions.palette.neutral.light
 
   const handlePost = async () => {
     const formData = new FormData()
@@ -86,7 +87,7 @@ const MyPostWidget: React.FC<MyPostWidgetProps> = ({ picturePath }) => {
           value={post}
           sx={{
             width: "100%",
-            backgroundColor: themeOptions.palette.neutral.dark,
+            backgroundColor: mode === "dark" ? light : dark,
             borderRadius: "2rem",
             padding: "1rem 2rem",
           }}
@@ -99,41 +100,6 @@ const MyPostWidget: React.FC<MyPostWidgetProps> = ({ picturePath }) => {
           mt="1rem"
           p="1rem"
         >
-          {/* <Dropzone
-            acceptedFiles=".jpg,.jpeg,.png"
-            multiple={false}
-            onDrop={(acceptedFiles: File[]) => setImage(acceptedFiles[0])}
-          >
-            {({ getRootProps, getInputProps }: DropzoneState) => (
-              <FlexBetween>
-                <Box
-                  {...getRootProps()}
-                  border={`2px dashed ${themeOptions.palette.primary.main}`}
-                  p="1rem"
-                  width="100%"
-                  sx={{ "&:hover": { cursor: "pointer" } }}
-                >
-                  <input {...getInputProps()} />
-                  {!image ? (
-                    <p>Add Image Here</p>
-                  ) : (
-                    <FlexBetween>
-                      <Typography>{image.name}</Typography>
-                      <EditOutlined />
-                    </FlexBetween>
-                  )}
-                </Box>
-                {image && (
-                  <IconButton
-                    onClick={() => setImage(null)}
-                    sx={{ width: "15%" }}
-                  >
-                    <DeleteOutlined />
-                  </IconButton>
-                )}
-              </FlexBetween>
-            )}
-          </Dropzone> */}
           <Dropzone
             multiple={false}
             onDrop={(acceptedFiles: File[]) => {
