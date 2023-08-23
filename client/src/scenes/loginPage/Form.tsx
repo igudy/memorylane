@@ -41,20 +41,26 @@ interface RegisterValues {
   location: string
   occupation: string
   picture: Picture
-  value: Value
+  values: Values
 }
 
-interface Value {
-  value: []
+interface Values {
+  firstName: string
+  lastName: string
+  location: string
+  occupation: string
+  picture: string | File
 }
 
 interface Picture {
   name: string | File
+  picture: string
 }
 
 interface LoginValues {
   email: string
   password: string
+  picture: Picture
 }
 
 const initialValuesRegister: RegisterValues = {

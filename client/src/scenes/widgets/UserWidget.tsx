@@ -29,7 +29,6 @@ interface User {
 
 interface Friend {
   friends: number
-  length: number
 }
 
 interface UserWidgetProps {
@@ -51,10 +50,13 @@ const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
   }
 
   const getUser = async () => {
-    const response = await fetch(`https://memorylane-bor2.onrender.com/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const response = await fetch(
+      `https://memorylane-bor2.onrender.com/users/${userId}`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
     const data: User = await response.json()
     setUser(data)
   }
