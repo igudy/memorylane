@@ -51,7 +51,7 @@ const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
   }
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`https://memorylane-bor2.onrender.com/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     })

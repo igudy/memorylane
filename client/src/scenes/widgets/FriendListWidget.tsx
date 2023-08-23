@@ -4,16 +4,41 @@ import WidgetWrapper from "../../components/WidgetWrapper"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setFriends } from "../../state"
+import { themeSettings } from "../../theme"
 
-const FriendListWidget = ({ userId }) => {
+// Mode for themeSettings
+let mode: "light" | "dark"
+
+interface FriendListWidgetProps {
+  userId: string
+  //   friends: Array<{
+  //   _id: string;
+  //   firstName: string;
+  //   lastName: string;
+  //   occupation: string;
+  //   picturePath: string;
+  //   // Add other friend properties here
+  // }>;
+}
+
+interface User {
+  user: string
+}
+
+interface RootState {
+  token: null
+  user: User
+}
+
+const FriendListWidget: React.FC<FriendListWidgetProps> = ({ userId }) => {
   const dispatch = useDispatch()
-  const { palette } = useTheme()
-  const token = useSelector((state) => state.token)
-  const friends = useSelector((state) => state.user.friends)
+  const token = useSelector((state: RootState) => state.token)
+  const friends = useSelector((state: RootState) => state.user.friends)
+  const themeOptions = themeSettings(mode)
 
   const getFriends = async () => {
     const response = await fetch(
-      `http://localhost:3001/users/${userId}/friends`,
+      `https://memorylane-bor2.onrender.com/users/${userId}/friends`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -30,7 +55,7 @@ const FriendListWidget = ({ userId }) => {
   return (
     <WidgetWrapper>
       <Typography
-        color={palette.neutral.dark}
+        color={themeOptions.palette.neutral.dark}
         variant="h5"
         fontWeight="500"
         sx={{ mb: "1.5rem" }}

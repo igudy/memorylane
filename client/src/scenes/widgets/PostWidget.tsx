@@ -69,14 +69,17 @@ const PostWidget: React.FC<PostWidgetProps> = ({
 
   // Like function
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId }),
-    })
+    const response = await fetch(
+      `https://memorylane-bor2.onrender.com/posts/${postId}/like`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: loggedInUserId }),
+      }
+    )
     const updatedPost = await response.json()
     // dispatch(setPost({ post: updatedPost }))
     dispatch(setPost({ post_id: postId, post: updatedPost }))
@@ -99,7 +102,7 @@ const PostWidget: React.FC<PostWidgetProps> = ({
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/assets/${picturePath}`}
+          src={`https://memorylane-bor2.onrender.com/assets/${picturePath}`}
         />
       )}
       <FlexBetween mt="0.25rem">

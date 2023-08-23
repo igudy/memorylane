@@ -59,7 +59,7 @@ const Friend: React.FC<FriendProps> = ({
 
   const patchFriend = async () => {
     const response = await fetch(
-      `http://localhost:3001/users/${_id}/${friendId}`,
+      `https://memorylane-bor2.onrender.com/users/${_id}/${friendId}`,
       {
         method: "PATCH",
         headers: {

@@ -10,6 +10,7 @@ import { themeSettings } from "./theme" // Adjust the import path for your theme
 
 interface RootState {
   mode: Mode
+  token: null
 }
 
 type Mode = "light" | "dark" // Replace this with your actual mode values
@@ -17,7 +18,7 @@ type Mode = "light" | "dark" // Replace this with your actual mode values
 function App() {
   const mode = useSelector((state: RootState) => state.mode)
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
-  const isAuth = Boolean(useSelector((state) => state.token))
+  const isAuth = Boolean(useSelector((state: RootState) => state.token))
 
   return (
     <div className="app">
