@@ -52,6 +52,10 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 
+app.get('/', (req, res) => {
+  res.send('<h1>Nenory Lane API</h1>');
+});
+
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
 mongoose
