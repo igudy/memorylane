@@ -20,23 +20,25 @@ interface User {
   _id: string
   firstName: string
   lastName: string
-  length: number | string
+  location: string
+  occupation: string
+  viewedProfile: string
+  impressions: number
+  friends: Friend
+}
+
+interface Friend {
+  friends: number
+  length: number
 }
 
 interface UserWidgetProps {
   userId: string
   picturePath: string
-  friends: number
-}
-
-interface RootState {
-  user: User
-  token: null
 }
 
 const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
-  const [user, setUser] = useState(null)
-
+  const [user, setUser] = useState<User | null>(null)
   const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.token)
   const themeOptions = themeSettings(mode)
@@ -44,18 +46,22 @@ const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
   const medium = themeOptions.palette.neutral.medium
   const main = themeOptions.palette.neutral.main
 
+  interface RootState {
+    token: string | null
+  }
+
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     })
-    const data = await response.json()
+    const data: User = await response.json()
     setUser(data)
   }
 
   useEffect(() => {
     getUser()
-  }, []) //eslint-disable-line react-hoooks/exhaustive-deps
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return null
