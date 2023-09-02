@@ -1,16 +1,16 @@
-import { Box, Typography, useTheme } from "@mui/material"
-import Friend from "../../components/Friend"
-import WidgetWrapper from "../../components/WidgetWrapper"
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { setFriends } from "../../state"
-import { themeSettings } from "../../theme"
+import { Box, Typography } from "@mui/material";
+import Friend from "../../components/Friend";
+import WidgetWrapper from "../../components/WidgetWrapper";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setFriends } from "../../state";
+import { themeSettings } from "../../theme";
 
 // Mode for themeSettings
-let mode: "light" | "dark"
+let mode: "light" | "dark";
 
 interface FriendListWidgetProps {
-  userId: string
+  userId: string;
   //   friends: Array<{
   //   _id: string;
   //   firstName: string;
@@ -21,20 +21,29 @@ interface FriendListWidgetProps {
   // }>;
 }
 
+interface FriendDetails {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  occupation: string;
+  picturePath: string;
+}
+
 interface User {
-  user: string
+  user: string;
+  friends: FriendDetails[];
 }
 
 interface RootState {
-  token: null
-  user: User
+  token: string | null;
+  user: User;
 }
 
 const FriendListWidget: React.FC<FriendListWidgetProps> = ({ userId }) => {
-  const dispatch = useDispatch()
-  const token = useSelector((state: RootState) => state.token)
-  const friends = useSelector((state: RootState) => state.user.friends)
-  const themeOptions = themeSettings(mode)
+  const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.token);
+  const friends = useSelector((state: RootState) => state.user.friends);
+  const themeOptions = themeSettings(mode);
 
   const getFriends = async () => {
     const response = await fetch(
@@ -43,14 +52,14 @@ const FriendListWidget: React.FC<FriendListWidgetProps> = ({ userId }) => {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       }
-    )
-    const data = await response.json()
-    dispatch(setFriends({ friends: data }))
-  }
+    );
+    const data = await response.json();
+    dispatch(setFriends({ friends: data }));
+  };
 
   useEffect(() => {
-    getFriends()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    getFriends();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <WidgetWrapper>
@@ -74,7 +83,7 @@ const FriendListWidget: React.FC<FriendListWidgetProps> = ({ userId }) => {
         ))}
       </Box>
     </WidgetWrapper>
-  )
-}
+  );
+};
 
-export default FriendListWidget
+export default FriendListWidget;

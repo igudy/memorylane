@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -6,16 +6,16 @@ import {
   useMediaQuery,
   Typography,
   useTheme,
-} from "@mui/material"
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
-import { Formik, FormikHelpers } from "formik"
-import * as yup from "yup"
-import { useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { setLogin } from "../../state"
-import Dropzone from "react-dropzone"
-import FlexBetween from "../../components/FlexBetween"
-import { themeSettings } from "../../theme"
+} from "@mui/material";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { Formik, FormikHelpers } from "formik";
+import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../state";
+import Dropzone from "react-dropzone";
+import FlexBetween from "../../components/FlexBetween";
+import { themeSettings } from "../../theme";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -25,42 +25,42 @@ const registerSchema = yup.object().shape({
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
   picture: yup.string().required("required"),
-})
+});
 
 const loginSchema = yup.object().shape({
   email: yup.string().email("invalid email").required("required"),
   password: yup.string().required("required"),
-})
+});
 
 // Assigining types in typescript
 interface RegisterValues {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-  location: string
-  occupation: string
-  picture: Picture
-  values: Values
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  location: string;
+  occupation: string;
+  picture: Picture;
+  values: Values;
 }
 
 interface Values {
-  firstName: string
-  lastName: string
-  location: string
-  occupation: string
-  picture: string | File
+  firstName: string;
+  lastName: string;
+  location: string;
+  occupation: string;
+  picture: string | File;
 }
 
 interface Picture {
-  name: string | File
-  picture: string
+  name: string;
+  picture: string | File;
 }
 
 interface LoginValues {
-  email: string
-  password: string
-  picture: Picture
+  email: string;
+  password: string;
+  picture: Picture;
 }
 
 const initialValuesRegister: RegisterValues = {
@@ -71,36 +71,36 @@ const initialValuesRegister: RegisterValues = {
   location: "",
   occupation: "",
   picture: "",
-}
+};
 
 const initialValuesLogin: LoginValues = {
   email: "",
   password: "",
-}
-let mode: "light" | "dark"
+};
+let mode: "light" | "dark";
 
 // React.FC in typescript shows that it is a functional component
 const Form: React.FC = () => {
-  const [pageType, setPageType] = useState("login")
-  const { palette } = useTheme()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const isNonMobile = useMediaQuery("(min-width:600px)")
-  const isLogin = pageType === "login"
-  const isRegister = pageType === "register"
-  const themeOptions = themeSettings(mode)
-  const alt = themeOptions.palette.background.alt
+  const [pageType, setPageType] = useState("login");
+  const { palette } = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const isLogin = pageType === "login";
+  const isRegister = pageType === "register";
+  const themeOptions = themeSettings(mode);
+  const alt = themeOptions.palette.background.alt;
 
   const register = async (
     values: RegisterValues,
     onSubmitProps: FormikHelpers<RegisterValues>
   ) => {
     // this allows us to send form info with image
-    const formData = new FormData()
+    const formData = new FormData();
     for (let value in values) {
-      formData.append(value, values[value])
+      formData.append(value, values[value]);
     }
-    formData.append("picturePath", values.picture.name)
+    formData.append("picturePath", values.picture.name);
 
     const savedUserResponse = await fetch(
       "https://memorylane-bor2.onrender.com/auth/register",
@@ -108,14 +108,14 @@ const Form: React.FC = () => {
         method: "POST",
         body: formData,
       }
-    )
-    const savedUser = await savedUserResponse.json()
-    onSubmitProps.resetForm()
+    );
+    const savedUser = await savedUserResponse.json();
+    onSubmitProps.resetForm();
 
     if (savedUser) {
-      setPageType("login")
+      setPageType("login");
     }
-  }
+  };
 
   const login = async (
     values: LoginValues, // Specify the type for values
@@ -128,27 +128,27 @@ const Form: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       }
-    )
-    const loggedIn = await loggedInResponse.json()
-    onSubmitProps.resetForm()
+    );
+    const loggedIn = await loggedInResponse.json();
+    onSubmitProps.resetForm();
     if (loggedIn) {
       dispatch(
         setLogin({
           user: loggedIn.user,
           token: loggedIn.token,
         })
-      )
-      navigate("/home")
+      );
+      navigate("/home");
     }
-  }
+  };
 
   const handleFormSubmit = async (
     values: RegisterValues | LoginValues,
     onSubmitProps: FormikHelpers<RegisterValues | LoginValues>
   ) => {
-    if (isRegister) await register(values, onSubmitProps)
-    if (isLogin) await login(values, onSubmitProps)
-  }
+    if (isRegister) await register(values, onSubmitProps);
+    if (isLogin) await login(values, onSubmitProps);
+  };
 
   return (
     <Formik
@@ -297,8 +297,8 @@ const Form: React.FC = () => {
             </Button>
             <Typography
               onClick={() => {
-                setPageType(isLogin ? "register" : "login")
-                resetForm()
+                setPageType(isLogin ? "register" : "login");
+                resetForm();
               }}
               sx={{
                 textDecoration: "underline",
@@ -317,7 +317,7 @@ const Form: React.FC = () => {
         </form>
       )}
     </Formik>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

@@ -1,28 +1,28 @@
-import Navbar from "../../scenes/navbar"
-import { Box, useMediaQuery } from "@mui/material"
-import { useSelector } from "react-redux"
-import UserWidget from "../../scenes/widgets/UserWidget"
-import MyPostWidget from "../../scenes/widgets/MyPostWidget"
-import PostsWidget from "../../scenes/widgets/PostsWidget"
-import AdvertWidget from "../../scenes/widgets/AdvertWidget"
-import FriendListWidget from "../../scenes/widgets/FriendListWidget"
+import Navbar from "../../scenes/navbar";
+import { Box, useMediaQuery } from "@mui/material";
+import { useSelector } from "react-redux";
+import UserWidget from "../../scenes/widgets/UserWidget";
+import MyPostWidget from "../../scenes/widgets/MyPostWidget";
+import PostsWidget from "../../scenes/widgets/PostsWidget";
+import AdvertWidget from "../../scenes/widgets/AdvertWidget";
+import FriendListWidget from "../../scenes/widgets/FriendListWidget";
 
 interface User {
-  user: string
-  _id: string
-  picturePath: string
+  user: string;
+  _id: string;
+  picturePath: string;
 }
 
 interface RootState {
-  user: User
-  token: string
+  user: User;
+  token: string | null;
 }
 
-let isProfile: boolean
+let isProfile: boolean;
 
 const HomePage = () => {
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px)")
-  const { _id, picturePath } = useSelector((state: RootState) => state.user)
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const { _id, picturePath } = useSelector((state: RootState) => state.user);
 
   return (
     <Box>
@@ -53,7 +53,7 @@ const HomePage = () => {
         )}
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

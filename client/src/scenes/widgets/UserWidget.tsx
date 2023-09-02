@@ -3,50 +3,51 @@ import {
   EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
-} from "@mui/icons-material"
-import { Box, Typography, Divider } from "@mui/material"
-import UserImage from "../../components/UserImage"
-import FlexBetween from "../../components/FlexBetween"
-import WidgetWrapper from "../../components/WidgetWrapper"
-import { useSelector } from "react-redux"
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { themeSettings } from "../../theme"
+} from "@mui/icons-material";
+import { Box, Typography, Divider } from "@mui/material";
+import UserImage from "../../components/UserImage";
+import FlexBetween from "../../components/FlexBetween";
+import WidgetWrapper from "../../components/WidgetWrapper";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { themeSettings } from "../../theme";
 
 // Mode for themeSettings
-let mode: "light" | "dark"
+let mode: "light" | "dark";
 
 interface User {
-  _id: string
-  firstName: string
-  lastName: string
-  location: string
-  occupation: string
-  viewedProfile: string
-  impressions: number
-  friends: Friend
+  _id: string;
+  firstName: string;
+  lastName: string;
+  location: string;
+  occupation: string;
+  viewedProfile: string;
+  impressions: number;
+  friends: Friend;
 }
 
 interface Friend {
-  friends: number
+  length: number;
+  friends: number;
 }
 
 interface UserWidgetProps {
-  userId: string
-  picturePath: string
+  userId: string;
+  picturePath: string;
 }
 
 const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const navigate = useNavigate()
-  const token = useSelector((state: RootState) => state.token)
-  const themeOptions = themeSettings(mode)
-  const dark = themeOptions.palette.neutral.dark
-  const medium = themeOptions.palette.neutral.medium
-  const main = themeOptions.palette.neutral.main
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
+  const token = useSelector((state: RootState) => state.token);
+  const themeOptions = themeSettings(mode);
+  const dark = themeOptions.palette.neutral.dark;
+  const medium = themeOptions.palette.neutral.medium;
+  const main = themeOptions.palette.neutral.main;
 
   interface RootState {
-    token: string | null
+    token: string | null;
   }
 
   const getUser = async () => {
@@ -56,17 +57,17 @@ const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       }
-    )
-    const data: User = await response.json()
-    setUser(data)
-  }
+    );
+    const data: User = await response.json();
+    setUser(data);
+  };
 
   useEffect(() => {
-    getUser()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    getUser();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
-    return null
+    return null;
   }
 
   const {
@@ -77,7 +78,7 @@ const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
     viewedProfile,
     impressions,
     friends,
-  } = user
+  } = user;
 
   return (
     <WidgetWrapper>
@@ -176,7 +177,7 @@ const UserWidget: React.FC<UserWidgetProps> = ({ userId, picturePath }) => {
         </FlexBetween>
       </Box>
     </WidgetWrapper>
-  )
-}
+  );
+};
 
-export default UserWidget
+export default UserWidget;

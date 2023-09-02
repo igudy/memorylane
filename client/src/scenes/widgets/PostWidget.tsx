@@ -3,47 +3,47 @@ import {
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
-} from "@mui/icons-material"
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material"
-import FlexBetween from "../../components/FlexBetween"
-import Friend from "../../components/Friend"
-import WidgetWrapper from "../../components/WidgetWrapper"
-import { useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { setPost } from "../../state"
-import { themeSettings } from "../../theme"
+} from "@mui/icons-material";
+import { Box, Divider, IconButton, Typography } from "@mui/material";
+import FlexBetween from "../../components/FlexBetween";
+import Friend from "../../components/Friend";
+import WidgetWrapper from "../../components/WidgetWrapper";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setPost } from "../../state";
+import { themeSettings } from "../../theme";
 
 interface Comment {
-  comment: string
-  comments: Comment | Comment[]
+  comment: string;
+  comments: Comment | Comment[];
 }
 
 interface Likes {
-  [userId: string]: boolean
+  [userId: string]: boolean;
 }
 
 interface PostWidgetProps {
-  postId: string
-  postUserId: string
-  name: string
-  description: string
-  location: string
-  picturePath: string
-  userPicturePath: string
-  likes: Likes
-  comments: Comment[]
+  postId: string;
+  postUserId: string;
+  name: string;
+  description: string;
+  location: string;
+  picturePath: string;
+  userPicturePath: string;
+  likes: Likes;
+  comments: Comment[];
 }
 
 interface User {
-  _id: string
+  _id: string;
 }
 
 interface RootState {
-  token: string | null
-  user: User
+  token: string | null;
+  user: User;
 }
 
-let mode: "light" | "dark"
+let mode: "light" | "dark";
 
 const PostWidget: React.FC<PostWidgetProps> = ({
   postId,
@@ -56,16 +56,16 @@ const PostWidget: React.FC<PostWidgetProps> = ({
   likes,
   comments,
 }) => {
-  const [isComments, setIsComments] = useState(false)
-  const dispatch = useDispatch()
-  const token = useSelector((state: RootState) => state.token)
-  const loggedInUserId = useSelector((state: RootState) => state.user._id)
-  const likeCount = Object.keys(likes).length
-  const isLiked = likes[loggedInUserId]
+  const [isComments, setIsComments] = useState(false);
+  const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.token);
+  const loggedInUserId = useSelector((state: RootState) => state.user._id);
+  const likeCount = Object.keys(likes).length;
+  const isLiked = likes[loggedInUserId];
 
-  const themeOptions = themeSettings(mode)
-  const main = themeOptions.palette.neutral.main
-  const primary = themeOptions.palette.primary.main
+  const themeOptions = themeSettings(mode);
+  const main = themeOptions.palette.neutral.main;
+  const primary = themeOptions.palette.primary.main;
 
   // Like function
   const patchLike = async () => {
@@ -79,11 +79,11 @@ const PostWidget: React.FC<PostWidgetProps> = ({
         },
         body: JSON.stringify({ userId: loggedInUserId }),
       }
-    )
-    const updatedPost = await response.json()
+    );
+    const updatedPost = await response.json();
     // dispatch(setPost({ post: updatedPost }))
-    dispatch(setPost({ post_id: postId, post: updatedPost }))
-  }
+    dispatch(setPost({ post_id: postId, post: updatedPost }));
+  };
 
   return (
     <WidgetWrapper m="2rem 0">
@@ -152,7 +152,7 @@ const PostWidget: React.FC<PostWidgetProps> = ({
         </Box>
       ))}
     </WidgetWrapper>
-  )
-}
+  );
+};
 
-export default PostWidget
+export default PostWidget;
