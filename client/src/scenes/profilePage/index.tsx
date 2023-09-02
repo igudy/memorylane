@@ -56,9 +56,12 @@ const ProfilePage: React.FC<ProfilePageProps> = () => {
         justifyContent="center"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={userId} picturePath={user.picturePath} />
+          {userId && (
+            <UserWidget userId={userId} picturePath={user.picturePath} />
+          )}
+          {/* <UserWidget userId={userId} picturePath={user.picturePath} /> */}
           <Box m="2rem 0" />
-          <FriendListWidget userId={userId} />
+          {userId && <FriendListWidget userId={userId} />}
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
@@ -66,7 +69,7 @@ const ProfilePage: React.FC<ProfilePageProps> = () => {
         >
           <MyPostWidget picturePath={user.picturePath} />
           <Box m="2rem 0" />
-          <PostsWidget userId={userId} isProfile />
+          {userId && <PostsWidget userId={userId} isProfile />}
         </Box>
       </Box>
     </Box>
