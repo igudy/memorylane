@@ -7,15 +7,42 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Formik, FormikHelpers } from "formik";
+
+import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../state";
-import Dropzone from "react-dropzone";
-import FlexBetween from "../../components/FlexBetween";
+import { setLogin } from "../../state/index";
+// import Dropzone from "react-dropzone";
+import MyDropzone from "./MyDropzone";
+// import { useDropzone } from "react-dropzone";
+import {
+  FormikHelpers,
+  FormikProps,
+  FormikTouched,
+  FormikErrors,
+} from "formik";
 import { themeSettings } from "../../theme";
+
+// Mode for themeSettings
+let mode: "light" | "dark";
+
+// Define your types
+interface RegisterValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  location: string;
+  occupation: string;
+  picture: File | null;
+}
+
+interface LoginValues {
+  email: string;
+  password: string;
+  picture: File | null;
+}
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -32,37 +59,6 @@ const loginSchema = yup.object().shape({
   password: yup.string().required("required"),
 });
 
-// Assigining types in typescript
-interface RegisterValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  location: string;
-  occupation: string;
-  picture: Picture;
-  values: Values;
-}
-
-interface Values {
-  firstName: string;
-  lastName: string;
-  location: string;
-  occupation: string;
-  picture: string | File;
-}
-
-interface Picture {
-  name: string;
-  picture: string | File;
-}
-
-interface LoginValues {
-  email: string;
-  password: string;
-  picture: Picture;
-}
-
 const initialValuesRegister: RegisterValues = {
   firstName: "",
   lastName: "",
@@ -70,16 +66,17 @@ const initialValuesRegister: RegisterValues = {
   password: "",
   location: "",
   occupation: "",
-  picture: "",
+  picture: null,
 };
 
 const initialValuesLogin: LoginValues = {
   email: "",
   password: "",
+  picture: null,
 };
-let mode: "light" | "dark";
 
-// React.FC in typescript shows that it is a functional component
+type FormValues = RegisterValues | LoginValues;
+
 const Form: React.FC = () => {
   const [pageType, setPageType] = useState("login");
   const { palette } = useTheme();
@@ -89,21 +86,22 @@ const Form: React.FC = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
   const themeOptions = themeSettings(mode);
-  const alt = themeOptions.palette.background.alt;
 
   const register = async (
     values: RegisterValues,
     onSubmitProps: FormikHelpers<RegisterValues>
   ) => {
-    // this allows us to send form info with image
     const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
+    for (const value in values) {
+      if (Object.prototype.hasOwnProperty.call(values, value)) {
+        formData.append(value, values[value as keyof RegisterValues] as string);
+      }
     }
-    formData.append("picturePath", values.picture.name);
+
+    formData.append("picturePath", values.picture!.name);
 
     const savedUserResponse = await fetch(
-      "https://memorylane-bor2.onrender.com/auth/register",
+      "http://localhost:3001/auth/register",
       {
         method: "POST",
         body: formData,
@@ -117,18 +115,16 @@ const Form: React.FC = () => {
     }
   };
 
+  // const login = async (values, onSubmitProps) => {
   const login = async (
-    values: LoginValues, // Specify the type for values
-    onSubmitProps: FormikHelpers<LoginValues> // Specify the type for onSubmitProps
+    values: LoginValues,
+    onSubmitProps: FormikHelpers<LoginValues>
   ) => {
-    const loggedInResponse = await fetch(
-      "https://memorylane-bor2.onrender.com/auth/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      }
-    );
+    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
     if (loggedIn) {
@@ -142,12 +138,30 @@ const Form: React.FC = () => {
     }
   };
 
+  // const handleFormSubmit = async (
+  //   values: RegisterValues | LoginValues,
+  //   onSubmitProps: FormikHelpers<RegisterValues | LoginValues>
+  // ) => {
+  //   if (isLogin) await login(values as LoginValues, onSubmitProps);
+  //   if (isRegister) await register(values as RegisterValues, onSubmitProps);
+  // };
+
   const handleFormSubmit = async (
     values: RegisterValues | LoginValues,
     onSubmitProps: FormikHelpers<RegisterValues | LoginValues>
   ) => {
-    if (isRegister) await register(values, onSubmitProps);
-    if (isLogin) await login(values, onSubmitProps);
+    if (isLogin) {
+      await login(
+        values as LoginValues,
+        onSubmitProps as FormikHelpers<LoginValues>
+      );
+    }
+    if (isRegister) {
+      await register(
+        values as RegisterValues,
+        onSubmitProps as FormikHelpers<RegisterValues>
+      );
+    }
   };
 
   return (
@@ -165,7 +179,7 @@ const Form: React.FC = () => {
         handleSubmit,
         setFieldValue,
         resetForm,
-      }) => (
+      }: FormikProps<FormValues>) => (
         <form onSubmit={handleSubmit}>
           <Box
             display="grid"
@@ -181,79 +195,125 @@ const Form: React.FC = () => {
                   label="First Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.firstName}
+                  value={(values as RegisterValues).firstName}
                   name="firstName"
                   error={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
+                    Boolean(
+                      (touched as FormikTouched<RegisterValues>).firstName
+                    ) &&
+                    Boolean((errors as FormikErrors<RegisterValues>).firstName)
                   }
-                  helperText={touched.firstName && errors.firstName}
+                  helperText={
+                    (touched as FormikTouched<RegisterValues>).firstName &&
+                    (errors as FormikErrors<RegisterValues>).firstName
+                  }
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
                   label="Last Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.lastName}
+                  value={(values as RegisterValues).lastName}
                   name="lastName"
-                  error={Boolean(touched.lastName) && Boolean(errors.lastName)}
-                  helperText={touched.lastName && errors.lastName}
+                  error={
+                    Boolean(
+                      (touched as FormikTouched<RegisterValues>).lastName
+                    ) &&
+                    Boolean((errors as FormikErrors<RegisterValues>).lastName)
+                  }
+                  helperText={
+                    (touched as FormikTouched<RegisterValues>).lastName &&
+                    (errors as FormikErrors<RegisterValues>).lastName
+                  }
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
                   label="Location"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.location}
+                  value={(values as RegisterValues).location}
                   name="location"
-                  error={Boolean(touched.location) && Boolean(errors.location)}
-                  helperText={touched.location && errors.location}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                <TextField
-                  label="Occupation"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.occupation}
-                  name="occupation"
                   error={
-                    Boolean(touched.occupation) && Boolean(errors.occupation)
+                    Boolean(
+                      (touched as FormikTouched<RegisterValues>).location
+                    ) &&
+                    Boolean((errors as FormikErrors<RegisterValues>).location)
                   }
-                  helperText={touched.occupation && errors.occupation}
+                  helperText={
+                    (touched as FormikTouched<RegisterValues>).location &&
+                    (errors as FormikErrors<RegisterValues>).location
+                  }
                   sx={{ gridColumn: "span 4" }}
                 />
-                <Box
+                {isRegister && (
+                  <>
+                    <TextField
+                      label="Occupation"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={(values as RegisterValues).occupation}
+                      name="occupation"
+                      error={
+                        Boolean(
+                          (touched as FormikTouched<RegisterValues>).occupation
+                        ) &&
+                        Boolean(
+                          (errors as FormikErrors<RegisterValues>).occupation
+                        )
+                      }
+                      helperText={
+                        (touched as FormikTouched<RegisterValues>).occupation &&
+                        (errors as FormikErrors<RegisterValues>).occupation
+                      }
+                      sx={{ gridColumn: "span 4" }}
+                    />
+                  </>
+                )}
+                {/* <Box
                   gridColumn="span 4"
-                  border={`1px solid ${palette.neutral.medium}`}
+                  border={`1px solid ${themeOptions.palette.neutral.medium}`}
                   borderRadius="5px"
                   p="1rem"
                 >
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
-                    onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles[0])
-                    }
+                    onDrop={(acceptedFiles: File[]) => {
+                      if (acceptedFiles.length > 0) {
+                        setFieldValue("picture", acceptedFiles[0]);
+                      }
+                    }}
                   >
                     {({ getRootProps, getInputProps }) => (
-                      <Box
-                        {...getRootProps()}
-                        border={`2px dashed ${palette.primary.main}`}
-                        p="1rem"
-                        sx={{ "&:hover": { cursor: "pointer" } }}
-                      >
+                      <div {...getRootProps()} style={{ outline: "none" }}>
                         <input {...getInputProps()} />
-                        {!values.picture ? (
-                          <p>Add Picture Here</p>
-                        ) : (
-                          <FlexBetween>
-                            <Typography>{values.picture.name}</Typography>
-                            <EditOutlinedIcon />
-                          </FlexBetween>
-                        )}
-                      </Box>
+                        <Box
+                          border={`2px dashed ${palette.primary.main}`}
+                          p="1rem"
+                          sx={{ "&:hover": { cursor: "pointer" } }}
+                        >
+                          {!values.picture ? (
+                            <p>Add Picture Here</p>
+                          ) : (
+                            <FlexBetween>
+                              <Typography>{values.picture.name}</Typography>
+                              <EditOutlinedIcon />
+                            </FlexBetween>
+                          )}
+                        </Box>
+                      </div>
                     )}
                   </Dropzone>
-                </Box>
+                </Box> */}
+                <Box
+  gridColumn="span 4"
+  border={`1px solid ${themeOptions.palette.neutral.medium}`}
+  borderRadius="5px"
+  p="1rem"
+>
+  {/* Replace the <Dropzone> component with MyDropzone */}
+  <MyDropzone setFieldValue={setFieldValue} values={values} palette={palette} />
+</Box>
               </>
             )}
 
@@ -289,7 +349,7 @@ const Form: React.FC = () => {
                 m: "2rem 0",
                 p: "1rem",
                 backgroundColor: palette.primary.main,
-                alt,
+                color: themeOptions.palette.background.alt,
                 "&:hover": { color: palette.primary.main },
               }}
             >
@@ -302,10 +362,10 @@ const Form: React.FC = () => {
               }}
               sx={{
                 textDecoration: "underline",
-                color: palette.primary.main,
+                color: themeOptions.palette.primary.main,
                 "&:hover": {
                   cursor: "pointer",
-                  color: palette.primary.light,
+                  color: themeOptions.palette.primary.light,
                 },
               }}
             >
