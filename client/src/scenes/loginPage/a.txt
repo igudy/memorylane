@@ -1,9 +1,0 @@
-<!-- git remote add origin https://gitlab.com/mern8101234/MemoryLane.git
-git branch -M main
-git push -uf origin main -->
-
-
-
-git@gitlab.com:mern8101234/MemoryLane.git
-
-git remote add origin-new git@gitlab.com:mern8101234/MemoryLane.git
