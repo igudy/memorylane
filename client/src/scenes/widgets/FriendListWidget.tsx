@@ -11,14 +11,6 @@ let mode: "light" | "dark";
 
 interface FriendListWidgetProps {
   userId: string;
-  //   friends: Array<{
-  //   _id: string;
-  //   firstName: string;
-  //   lastName: string;
-  //   occupation: string;
-  //   picturePath: string;
-  //   // Add other friend properties here
-  // }>;
 }
 
 interface FriendDetails {
