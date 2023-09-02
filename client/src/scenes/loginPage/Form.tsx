@@ -136,13 +136,6 @@ const Form: React.FC = () => {
     }
   };
 
-  // const handleFormSubmit = async (
-  //   values: RegisterValues | LoginValues,
-  //   onSubmitProps: FormikHelpers<RegisterValues | LoginValues>
-  // ) => {
-  //   if (isLogin) await login(values as LoginValues, onSubmitProps);
-  //   if (isRegister) await register(values as RegisterValues, onSubmitProps);
-  // };
 
   const handleFormSubmit = async (
     values: RegisterValues | LoginValues,

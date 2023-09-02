@@ -6,14 +6,14 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { themeSettings } from "./theme"; // Adjust the import path for your themeSettings function
+import { themeSettings } from "./theme";
 
 interface RootState {
   mode: Mode;
   token: string | null;
 }
 
-type Mode = "light" | "dark"; // Replace this with your actual mode values
+type Mode = "light" | "dark"; 
 
 function App() {
   const mode = useSelector((state: RootState) => state.mode);
